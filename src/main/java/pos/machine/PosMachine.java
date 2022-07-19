@@ -38,15 +38,28 @@ public class PosMachine {
     }
 
     public String renderReceipt(Receipt receipt) {
-        return null;
+        return spliceReceipt(receipt);
     }
 
     public String spliceItemsDetail(Receipt receipt) {
-        return null;
+        String itemsDetail = "";
+        List<ReceiptItem> receiptItems = receipt.getReceiptItems();
+        for(ReceiptItem receiptItem : receiptItems) {
+            String name = receiptItem.getName();
+            int quantity = receiptItem.getQuantity();
+            int unitPrice = receiptItem.getUnitPrice();
+            int subTotal = receiptItem.getSubTotal();
+            itemsDetail += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n", name, quantity, unitPrice, subTotal);
+        }
+        return itemsDetail;
     }
 
     public String spliceReceipt(Receipt receipt) {
-        return null;
+        return "***<store earning no money>Receipt***\n" +
+                spliceItemsDetail(receipt)+
+                "----------------------\n" +
+                String.format("Total: %d (yuan)\n", receipt.getTotalPrice()) +
+                "**********************";
     }
 
     public String printReceipt(List<String> barcodes) {
