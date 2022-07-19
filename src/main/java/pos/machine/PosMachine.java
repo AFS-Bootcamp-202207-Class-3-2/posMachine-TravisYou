@@ -1,5 +1,6 @@
 package pos.machine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +16,25 @@ public class PosMachine {
     }
 
     public Receipt makeReceipt(Map<String, Integer> barcodesQuantity) {
-        return null;
+        List<ReceiptItem> receiptItems = getReceiptItems(barcodesQuantity);
+        int totalPrice = getTotalPrice(receiptItems);
+        return new Receipt(totalPrice, receiptItems);
     }
 
     public List<ReceiptItem> getReceiptItems(Map<String, Integer> barcodesQuantity) {
-        return null;
+        List<ReceiptItem> receiptItems = new ArrayList<>();
+        List<ItemInfo> itemInfos = ItemDataLoader.loadAllItemInfos();
+        itemInfos.forEach(itemInfo -> {
+            int quantity = barcodesQuantity.get(itemInfo.getBarcode());
+            ReceiptItem receiptItem = new ReceiptItem(itemInfo.getName(), quantity, itemInfo.getPrice());
+            receiptItems.add(receiptItem);
+        });
+        return receiptItems;
     }
 
     public int getTotalPrice(List<ReceiptItem> receiptItems) {
-        return 0;
+        int totalPrice = receiptItems.stream().mapToInt(ReceiptItem::getSubTotal).sum();
+        return totalPrice;
     }
 
     public String renderReceipt(Receipt receipt) {
